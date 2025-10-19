@@ -1,0 +1,5 @@
+#ifndef LAZYSKELETONS_FRAMEWORK_LSKEL_CUH
+#define LAZYSKELETONS_FRAMEWORK_LSKEL_CUH
+#pragma once
+#include "fused_gpu_vec.cuh"
+#endif // LAZYSKELETONS_FRAMEWORK_LSKEL_CUH
