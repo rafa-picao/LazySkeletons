@@ -20,6 +20,6 @@ Include the lskel.cuh header file in your C++ project
 
 Use the namespace lskel to access the library's functionalities.
 
-Go to github page: [LazySkeletons](https://github.com/rafa-picao/LazySkeletons) for more information.
+Go to github page: [LazySkeletons](https://rafa-picao.github.io/LazySkeletons/) for more information.
 
 
