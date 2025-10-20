@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Examples and Performance - Lazy Skeletons</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        <link rel="icon" href="images/favicon.png" type="image/x-icon"> 
+	</head>
+	
+    <body class="is-preload">
+
+		<header id="header">
+            <a href="index.html" class="title">Lazy Skeletons</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="docs.html">Documentation</a></li>
+                    <li><a href="examples.html" class="active">Examples & Performance</a></li>
+                </ul>
+            </nav>
+        </header>
+
+		<div id="wrapper">
+
+            <section id="intro" class="wrapper fullscreen fade-up">
+				<div class="inner">
+					<h1 class="major">Framework Performance Benchmarks</h1>
+					<p>This section evaluates the performance of the Lazy Skeletons framework on common, multi-stage computational tasks, comparing it directly against NVIDIA's highly optimized <strong>Thrust library</strong>. We use Vector Normalization and ReLU Sum as benchmarks to demonstrate the effectiveness of our framework's kernel fusion capabilities in high-performance computing.</p>
+					<ul class="actions">
+						<li><a href="#saxpy" class="button scrolly">View Examples</a></li>
+					</ul>
+				</div>
+			</section>
+
+            <section id="saxpy" class="wrapper spotlights">
+                <div class="inner">
+                    <h2>SAXPY Example</h2>
+                    <p>The SAXPY (Single-Precision A * X Plus Y) algorithm is a simple illustration of the API's simplicity and power. Note the clean, chainable syntax. The computation is fused into a single kernel and executed only at the assignment to the result variable <code>z</code>.</p>
+
+                    <h3>User defined functors</h3>
+                    <pre><code>struct saxpy_functor {
+	const float a;
+	__device__ float operator()(float x, float y) const {
+		return a * x + y;
+	}
+};
+struct reduce_functor {
+	__device__ float operator()(float x, float y) const {
+		return x + y;
+	}
+}</code></pre>
+
+                    <h3>SAXPY Implementation</h3>
+                    <pre><code>int main() {
+	float a = 2.0f;
+	int n = 1 &lt;&lt; 20; // ~1 million elements
+	lskel::Vector&lt;float&gt; x(n, 1.0f); // Vector of 1s
+	lskel::Vector&lt;float&gt; y(n, 2.0f); // Vector of 2s
+	float z;
+	// Computation is fused and triggered on this line
+	z = y.map(x, saxpy_functor(a)).reduce(reduce_functor(), 0.0f); 
+	// z now contains the result (2.0 * 1.0 + 2.0) * n = 4 million
+	return 0;
+}</code></pre>
+                </div>
+			</section>
+
+            <section id="chained-map" class="wrapper fade-up">
+                <div class="inner">
+                    <h2>Performance of Fused Operations (Chained Maps)</h2>
+                    <p>One of the defining strengths of our framework is its ability to combine multiple Map operations into a single kernel launch. This is achieved through expression templates, which enable lazy evaluation and symbolic composition, significantly reducing overhead and improving performance.</p>
+
+                    <p>To evaluate this, we benchmarked ten chained Map operations against an equivalent implementation in Thrust. Our framework fuses all ten operations into a single kernel, while Thrust requires ten separate kernel launches. The performance difference is clear in the figure below.</p>
+
+                    <span class="image fit"><img src="images/ten_chained_map3.png" alt="Chained Map Benchmark (10 Computations)" /></span>
+                    <p class="align-center">Chained Map Benchmark (10 Computations)</p>
+
+                    <p>The Thrust implementation's execution time increases substantially with vector size due to repeated kernel launch latency. In contrast, our fused kernel maintains near-constant overhead. This highlights how kernel fusion dramatically reduces launch overhead and avoids unnecessary intermediate memory operations, demonstrating the effectiveness of our optimization strategy.</p>
+                </div>
+			</section>
+
+            <section id="vector-norm" class="wrapper fade-up">
+                <div class="inner">
+                    <h2>Vector Normalization</h2>
+                    <p>Vector normalization scales a vector to a magnitude (L₂ norm) of 1. The operation involves an expensive, multi-stage process where each element $v_i$ is divided by the vector's magnitude $\lVert \mathbf{v} \rVert = \sqrt{\sum v_i^2}$.</p>
+
+                    <p>A standard implementation requires separate kernels for squaring, summing (reduction), taking the square root, and final division. Our framework optimizes this by automatically fusing the steps, converting the sequence into a more efficient Map-Reduce followed by a Map operation.</p>
+
+                    <span class="image fit"><img src="images/normalize_vector4.png" alt="Performance comparison of Vector Normalization between Lazy Skeletons and Thrust" /></span>
+                    <p class="align-center">Performance comparison between our framework (lskel) and a multi-step Thrust implementation for Vector Normalization.</p>
+                </div>
+			</section>
+
+            <section id="relu-sum" class="wrapper spotlights">
+                <div class="inner">
+                    <h2>ReLU Sum</h2>
+                    <p>The ReLU Sum is a classic Map-Reduce pattern used widely in neural networks, where the Rectified Linear Unit function (max(0, x)) is applied element-wise, followed by a sum reduction. This benchmark highlights the efficiency of our direct Map-Reduce fusion compared to a standard implementation that requires two separate kernel launches (one for Map, one for Reduce).</p>
+
+                    <span class="image fit"><img src="images/reluSum4.png" alt="Performance comparison of ReLU Sum (Map-Reduce) between Lazy Skeletons and Thrust" /></span>
+                    <p class="align-center">Performance comparison of the ReLU Sum operation between our framework and a standard Thrust implementation.</p>
+                </div>
+			</section>
+
+            <section id="analysis" class="wrapper fade-up">
+                <div class="inner">
+                    <h2>Performance Analysis</h2>
+                    <p>The benchmark results validate the framework's fusion architecture:</p>
+
+                    <ul>
+                        <li>The ReLU Sum shows a significant advantage for our framework, with performance scaling better as vector size increases. This is due to our Map-Reduce fusion which executes the entire computation in a single kernel, eliminating overhead from multiple kernel launches and avoiding global memory writes for intermediate results.</li>
+                        <li>The Vector Normalization benchmark demonstrates that the framework automatically provides high-level performance comparable to a manually optimized Thrust solution, even for complex, multi-stage operations.</li>
+                    </ul>
+
+                    <p>These findings confirm that the framework's high-level API successfully abstracts complexity while generating highly efficient, fused kernels competitive with industry-standard libraries.</p>
+                </div>
+			</section>
+
+		</div>
+
+		<footer id="footer" class="wrapper alt">
+			<div class="inner">
+				<ul class="menu">
+					<li>&copy; Lazy Skeletons. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</div>
+		</footer>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.scrollex.min.js"></script>
+		<script src="assets/js/jquery.scrolly.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

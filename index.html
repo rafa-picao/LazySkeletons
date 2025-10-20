@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Lazy Skeletons</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+	</head>
+	
+    <body class="is-preload">
+
+		<header id="header">
+            <a href="index.html" class="title">Lazy Skeletons</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="docs.html">Documentation</a></li>
+                    <li><a href="examples.html">Examples & Performance</a></li>
+                </ul>
+            </nav>
+        </header>
+
+		<div id="wrapper">
+
+				<section id="intro" class="wrapper style1 fullscreen fade-up">
+						<div class="inner">
+							<h1>Lazy Skeletons</h1>
+							<p>Lazy Skeletons is a C++ library for building high-performance, data-parallel applications.<br />
+							Based on the concept of algorithmic skeletons, it provides a simple and expressive API for composing complex computations from a small set of high-level parallel patterns.</p>
+							<ul class="actions">
+								<li><a href="#one" class="button scrolly">Get Started</a></li>
+							</ul>
+						</div>
+					</section>
+
+				<section id="one" class="wrapper style2 spotlights">
+						<section>
+							<a href="docs.html" class="image"><img src="images/pic01.jpg" alt="Code snippet" data-position="center center" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Getting Started</h2>
+									
+									<h3>Requirements</h3>
+									<ul>
+										<li><strong>CUDA Toolkit 12.6</strong></li>
+										<li>A compatible **NVIDIA GPU**</li>
+										<li>**C++20** compiler</li>
+									</ul>
+									
+									<h3>Installation</h3>
+									<p>Download or clone the repository from GitHub:</p>
+									<pre><code>git clone https://github.com/rafa-picao/LazySkeletons.git</code></pre>
+									
+									<h3>Usage</h3>
+									<p>Include the <code>lskel.cuh</code> header file in your C++ project and use the <code>lskel</code> namespace to access the library's functionalities.</p>
+
+									<ul class="actions">
+										<li><a href="docs.html" class="button">View API Reference</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+						
+						<section>
+							<a href="examples.html" class="image"><img src="images/pic02.jpg" alt="Performance graph" data-position="25% 25%" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Examples and Benchmarks</h2>
+									<p>See real-world code examples (like SAXPY) and detailed performance benchmarks demonstrating the benefits of kernel fusion against NVIDIA Thrust.</p>
+									<ul class="actions">
+										<li><a href="examples.html" class="button">View Benchmarks</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+					</section>
+
+				<section id="two" class="wrapper style3 fade-up">
+						<div class="inner">
+							<h2>Why Choose Lazy Skeletons?</h2>
+							<p>Our API delivers optimized performance by automatically fusing multiple operations into a single kernel, dramatically reducing GPU overhead and memory transfers.</p>
+							<div class="features">
+								<section>
+									<span class="icon solid major fa-link"></span>
+									<h3>Automatic Kernel Fusion</h3>
+									<p>Chain multiple Map and Reduce operations together, and the framework compiles them into a single, highly efficient kernel.</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-code"></span>
+									<h3>High-Level C++ API</h3>
+									<p>Use expressive parallel patterns (skeletons) to build complex algorithms without writing explicit CUDA or memory boilerplate.</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-rocket"></span>
+									<h3>Minimal Overhead</h3>
+									<p>Lazy evaluation ensures computation only happens when the result is needed, minimizing unnecessary execution and host-device synchronization.</p>
+								</section>
+							</div>
+							<ul class="actions">
+								<li><a href="docs.html" class="button">Explore Documentation</a></li>
+							</ul>
+						</div>
+					</section>
+					
+				<section id="three" class="wrapper style1 fade-up">
+						<div class="inner">
+							<h2>Get in Touch</h2>
+							<p>Have questions about the framework, potential contributions, or collaboration opportunities? Reach out via email or connect on social media.</p>
+							<div class="split style1">
+								
+								<section>
+									<ul class="contact">
+										<li>
+											<h3>Email</h3>
+											<a href="mailto:rafaelpfcorreia.trabalho@gmail.com">rafaelpfcorreia.trabalho@gmail.com</a>
+										</li>
+										<li>
+											<h3>Social</h3>
+											<ul class="icons">
+												<li><a href="https://github.com/rafa-picao" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+												<li><a href="https://www.linkedin.com/in/rafael-picao/" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+											</ul>
+										</li>
+									</ul>
+								</section>
+							</div>
+						</div>
+					</section>
+
+			</div>
+
+		<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Lazy Skeletons. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

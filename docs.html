@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Lazy Skeletons Documentation</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        <link rel="icon" href="images/favicon.png" type="image/x-icon"> 
+	</head>
+	
+    <body class="is-preload">
+
+		<header id="header">
+            <a href="index.html" class="title">Lazy Skeletons</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="docs.html" class="active">Documentation</a></li>
+                    <li><a href="examples.html">Examples & Performance</a></li>
+                </ul>
+            </nav>
+        </header>
+
+		<div id="wrapper">
+
+            <section id="intro" class="wrapper style1 fullscreen fade-up">
+				<div class="inner">
+					<h1 class="major">Framework API Overview</h1>
+					<p>The framework provides a simple and intuitive API, primarily exposed through the <code>lskel::Vector</code> class. Review the constructors, core operations, and utility functions below.</p>
+					<ul class="actions">
+						<li><a href="#constructors" class="button scrolly">View API</a></li>
+					</ul>
+				</div>
+			</section>
+
+            <section id="constructors" class="wrapper style2 spotlights">
+                <div class="inner">
+                    <h2>Initialization and Constructors</h2>
+                    <p>The <code>lskel::Vector</code> class offers a variety of constructors for seamless initialization from different data sources, including standard C++ vectors or other <code>lskel::Vector</code> objects. This flexibility allows developers to easily move their data to the GPU and begin computation. In the table below are the ways to initialize our Vector.</p>
+
+                    <h3>Initialization API Calls</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>API</th>
+                                    <th>Brief description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>lskel::Vector&lt;T&gt; vector(N)</code></td>
+                                    <td>Initializes vector of type T with size N</td>
+                                </tr>
+                                <tr>
+                                    <td><code>lskel::Vector&lt;T&gt; vector(N, x)</code></td>
+                                    <td>Initializes vector of type T with size N, with all values equal to x</td>
+                                </tr>
+                                <tr>
+                                    <td><code>lskel::Vector&lt;T&gt; vector(std::vector v)</code></td>
+                                    <td>Initializes a vector with the contents of the standard vector v</td>
+                                </tr>
+                                <tr>
+                                    <td><code>lskel::Vector&lt;T&gt; vector(lskel::vector v)</code></td>
+                                    <td>Initializes a vector with the contents of another vector from our framework</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+			</section>
+
+            <section id="operations" class="wrapper style3 fade-up">
+                <div class="inner">
+                    <h2>Operations and Chaining</h2>
+                    <p>These functions are the core functions for performing parallel computations. The operations are designed to be **chainable**, returning a new expression object that represents the pending computation. The computation is only executed when the expression is assigned to a variable or read operations (<code>.print()</code> and accessing through the <code>[]</code> operator), triggering the **lazy evaluation model**.</p>
+
+                    <h3>Chainable API Calls</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>API</th>
+                                    <th>Brief description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>vector.map(op)</code></td>
+                                    <td>Applies op to every element in vector.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.map(in, op)</code></td>
+                                    <td>Applies an operation op with an extra input in, to every element in vector.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.map(in, op, out1, out2)</code></td>
+                                    <td>Applies an operation op with vector and in as inputs and returns the desired output to out1 and out2. The operation must return a <code>Pair</code> struct. Calling this ends the chain.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.map(op, out)</code></td>
+                                    <td>Applies an operation op with vector as input and returns the result to out.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.map(in, op, out)</code></td>
+                                    <td>Applies an operation op with vector and in as input and return the result to out.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.reduce(op, i)</code></td>
+                                    <td>Transforms a Vector with an operation op and identity i, into a reduced, single value. Calling this ends the chain.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Chaining Example</h3>
+                    <p>In the snippet below, we illustrate our framework’s chaining mechanism. First, <code>op1</code> is applied to <code>vec</code>, with the result stored in <code>out1</code>. Then, the composition of <code>op2</code> and <code>op3</code> is executed as a single fused operation, and the final result is stored in <code>out2</code>.</p>
+                    <pre><code>vec.map(op1, out1).map(op2).map(op3,out2)</code></pre>
+                </div>
+			</section>
+
+            <section id="utility" class="wrapper style1 fade-up">
+                <div class="inner">
+                    <h2>Utility and Debugging</h2>
+                    <p>This set of functions provides helpful utilities for managing data transfers, debugging, and inspecting the contents of the vector. While some of these are intended for development and debugging, they are essential tools for ensuring the correctness of the program.</p>
+
+                    <h3>Utility and Debugging API</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>API</th>
+                                    <th>Brief description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>vector[i]</code></td>
+                                    <td>Access of the data of the vector, depending on context it could be device or host data.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.copyToHost(std::vector&lt;T&gt; v)</code></td>
+                                    <td>Copies the device data to a standard vector v.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.copyToHost(std::vector&lt;T&gt;&amp; v, cudaStream_t s)</code></td>
+                                    <td>Used for debugging. Copies the device data asynchronously to a standard vector v.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.copyToDeviceAsync(std::vector&lt;T&gt;&amp; v)</code></td>
+                                    <td>Copies the contents of a standard vector v to the vector's device data.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.synchronize()</code></td>
+                                    <td>Used for debugging, Synchronizes the vector's stream.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.fill_with_sequence()</code></td>
+                                    <td>Fills all the vector's elements with the value index + 1.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>vector.print(char* msg)</code></td>
+                                    <td>Prints the string msg and then prints the contents of the vector.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+			</section>
+
+		</div>
+
+		<footer id="footer" class="wrapper alt">
+			<div class="inner">
+				<ul class="menu">
+					<li>&copy; Lazy Skeletons. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</div>
+		</footer>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.scrollex.min.js"></script>
+		<script src="assets/js/jquery.scrolly.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
